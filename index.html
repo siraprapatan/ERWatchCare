@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ER WatchCare | ระบบติดตามผู้ป่วยฉุกเฉิน</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- SheetJS สำหรับสร้างไฟล์ Excel -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    :root{--bg:#f4f7f8;--card:#fff;--ink:#22313a;--muted:#71808a;--line:#e7edef;--primary:#327d7a;--primary-soft:#e5f2f0;--orange:#d98b45;--red:#c85d62;--blue:#5278a8;--shadow:0 12px 34px rgba(39,67,75,.08)}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Anuphan,system-ui,sans-serif;font-size:15px}button,input,select{font:inherit}button{cursor:pointer;border:0}.app{display:flex;min-height:100vh}.sidebar{width:246px;background:#eef5f4;border-right:1px solid #dde9e7;padding:25px 16px;display:flex;flex-direction:column}.brand{display:flex;align-items:center;gap:11px;padding:0 10px 30px}.brand-mark{width:39px;height:39px;border-radius:13px;background:var(--primary);color:#fff;display:grid;place-items:center;font-weight:700;font-size:20px;box-shadow:0 6px 14px rgba(50,125,122,.2)}.brand strong{display:block;font-size:17px}.brand small{color:var(--muted);font-size:11px}.nav-label{color:#9aa8aa;font-size:11px;padding:0 12px;margin:4px 0 9px;text-transform:uppercase;letter-spacing:.08em}.nav button{display:flex;width:100%;align-items:center;gap:12px;padding:12px;border-radius:11px;color:#5e7074;background:transparent;text-align:left;margin:3px 0}.nav button.active,.nav button:hover{background:#dcecea;color:#246966}.nav-icon{font-size:18px;width:22px;text-align:center}.sidebar-footer{margin-top:auto;background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px;font-size:12px;color:var(--muted)}.status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#64ad8d;margin-right:6px}.main{flex:1;min-width:0;padding:25px 34px}.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:27px}.eyebrow{font-size:12px;color:var(--muted);margin-bottom:3px}.topbar h1{font-size:25px;margin:0;font-weight:700}.actions{display:flex;gap:10px;align-items:center}.date-chip{color:var(--muted);background:#fff;border:1px solid var(--line);padding:9px 13px;border-radius:10px}.primary{background:var(--primary);color:#fff;padding:10px 16px;border-radius:10px;box-shadow:0 5px 12px rgba(50,125,122,.17)}.primary:hover{background:#286b68}.primary:disabled{opacity:.6;cursor:wait}.outline{color:var(--primary);background:transparent;border:1px solid #c5dfdc;padding:9px 14px;border-radius:9px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:21px}.stat-card,.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}.stat-card{padding:18px}.stat-top{display:flex;justify-content:space-between;align-items:flex-start;color:var(--muted);font-size:13px}.stat-icon{width:35px;height:35px;border-radius:10px;display:grid;place-items:center;font-size:17px}.stat-value{font-size:28px;font-weight:700;margin:12px 0 2px}.stat-note{font-size:12px;color:var(--muted)}.green{background:#e2f1eb;color:#3e9276}.amber{background:#fff0df;color:#c57d35}.rose{background:#f9e8e9;color:#b65c65}.sky{background:#e9f0f9;color:#5278a8}.content-grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(320px,.85fr);gap:20px}.panel{overflow:hidden}.panel-header{padding:19px 20px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px}.panel-header h2{font-size:17px;margin:0}.panel-header p{font-size:12px;color:var(--muted);margin:4px 0 0}.search{display:flex;gap:8px;padding:0 20px 15px}.search input,.form-control{background:#fbfcfc;border:1px solid #dfe8e9;border-radius:9px;padding:10px 12px;outline:none;width:100%;color:var(--ink)}.search input:focus,.form-control:focus{border-color:#80b8b4;box-shadow:0 0 0 3px #e7f3f1}.filter{padding:10px 12px;border:1px solid #dfe8e9;border-radius:9px;color:var(--muted);background:#fff}.table-wrap{overflow:auto}.patients{width:100%;border-collapse:collapse;min-width:630px}.patients th{text-align:left;color:#91a0a2;font-size:11px;font-weight:500;background:#fafcfc;padding:10px 20px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);white-space:nowrap}.patients td{padding:14px 20px;border-bottom:1px solid #f0f3f3;font-size:13px}.patients tr:last-child td{border-bottom:0}.patient-name{font-weight:600}.patient-id{color:var(--muted);font-size:11px;margin-top:2px}.badge{display:inline-flex;padding:4px 9px;border-radius:20px;font-size:11px;white-space:nowrap}.critical{background:#fbe7e7;color:#b64f55}.urgent{background:#fff0dc;color:#b77329}.normal{background:#e6f2ed;color:#40866e}.waiting{background:#eaf0f7;color:#5278a8}.done{background:#eef0f1;color:#788386}.status-select{border:1px solid transparent;border-radius:20px;padding:4px 8px;font-size:11px;cursor:pointer;outline:none}.status-select:focus{border-color:#80b8b4}.queue{list-style:none;margin:0;padding:0 20px 18px}.queue li{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #eff2f2}.queue li:last-child{border:0}.queue-number{width:29px;height:29px;border-radius:9px;background:var(--primary-soft);color:var(--primary);display:grid;place-items:center;font-weight:700;font-size:13px}.queue-info{flex:1}.queue-info strong{display:block;font-size:13px}.queue-info span{color:var(--muted);font-size:11px}.queue-time{color:var(--muted);font-size:11px;text-align:right}.empty{color:var(--muted);text-align:center;padding:28px}.modal-backdrop{position:fixed;inset:0;background:rgba(33,53,59,.32);display:grid;place-items:center;padding:20px;z-index:5}.modal{background:#fff;border-radius:18px;width:min(580px,100%);max-height:90vh;overflow:auto;box-shadow:0 22px 55px rgba(25,45,50,.2)}.modal-head{display:flex;justify-content:space-between;padding:21px 24px;border-bottom:1px solid var(--line)}.modal-head h2{margin:0;font-size:19px}.close{background:#f1f4f4;color:var(--muted);border-radius:8px;width:29px;height:29px;font-size:20px}.form{padding:20px 24px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field label{display:block;font-size:12px;color:#637477;margin:0 0 6px}.field.full{grid-column:1/-1}.form-footer{display:flex;justify-content:flex-end;gap:9px;margin-top:20px}.toast{position:fixed;right:25px;bottom:25px;background:#26494a;color:#fff;padding:12px 17px;border-radius:10px;box-shadow:var(--shadow);z-index:10}.toast.error{background:#9c3f45}.hidden{display:none!important}
+    .toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:0 20px 15px}.toolbar .form-control,.toolbar .filter{width:auto;flex:0 0 auto}.toolbar .grow{flex:1 1 200px}.toolbar label{font-size:12px;color:var(--muted)}.excel{background:#1f7a4d;color:#fff;padding:9px 14px;border-radius:9px;white-space:nowrap}.excel:hover{background:#196640}.count{font-size:12px;color:var(--muted);padding:0 20px 10px}.report-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:20px;margin-top:20px}.mini{width:100%;border-collapse:collapse}.mini th,.mini td{padding:9px 20px;font-size:13px;border-bottom:1px solid #f0f3f3;text-align:left}.mini th{color:#91a0a2;font-size:11px;font-weight:500;background:#fafcfc;border-top:1px solid var(--line)}.mini td.num,.mini th.num{text-align:right;white-space:nowrap}.bar{height:6px;background:var(--primary-soft);border-radius:4px;overflow:hidden;margin-top:5px}.bar i{display:block;height:100%;background:var(--primary);border-radius:4px}.visit{border-top:1px solid var(--line);padding:16px 20px}.visit-head{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:center}.visit-meta{font-size:12px;color:var(--muted);margin-top:4px}.timeline{list-style:none;margin:12px 0 0;padding:0 0 0 14px;border-left:2px solid var(--primary-soft)}.timeline li{font-size:12px;color:var(--muted);padding:3px 0}.timeline b{color:var(--ink);font-weight:500}.hint{font-size:12px;color:var(--muted);padding:0 20px 16px}
+    @media(max-width:1000px){.sidebar{width:76px;padding:20px 10px}.brand{padding:0 8px 28px}.brand div:last-child,.nav-label,.nav button span:not(.nav-icon),.sidebar-footer{display:none}.nav button{justify-content:center}.main{padding:22px}.content-grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:600px){.app{flex-direction:column}.sidebar{width:100%;flex-direction:row;padding:8px 10px;border-right:0;border-bottom:1px solid #dde9e7}.brand{padding:0 6px 0 0}.nav{display:flex;flex:1;justify-content:space-around}.nav button{width:auto;margin:0;padding:10px}.main{padding:17px 12px}.topbar{align-items:flex-start;gap:14px}.topbar h1{font-size:21px}.date-chip{display:none}.stats{gap:10px}.stat-card{padding:13px}.stat-value{font-size:23px}.content-grid{gap:13px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.panel-header{flex-wrap:wrap}.toolbar .form-control,.toolbar .filter{flex:1 1 130px}.toast{left:12px;right:12px;bottom:12px}.report-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-mark">+</div><div><strong>ER WatchCare</strong><small>Emergency Care System</small></div></div>
+      <div class="nav-label">เมนูหลัก</div>
+      <nav class="nav">
+        <button class="active" data-view="overview" onclick="showView('overview')" title="ภาพรวม"><span class="nav-icon">⌂</span><span>ภาพรวม</span></button>
+        <button onclick="openModal()" title="ลงทะเบียนผู้ป่วย"><span class="nav-icon">＋</span><span>ลงทะเบียนผู้ป่วย</span></button>
+        <button data-view="list" onclick="showView('list')" title="รายการผู้ป่วย"><span class="nav-icon">▣</span><span>รายการผู้ป่วย</span></button>
+        <button data-view="history" onclick="showView('history')" title="ประวัติการรักษา"><span class="nav-icon">◷</span><span>ประวัติการรักษา</span></button>
+        <button data-view="report" onclick="showView('report')" title="รายงาน"><span class="nav-icon">▥</span><span>รายงาน</span></button>
+      </nav>
+      <div class="sidebar-footer"><span class="status-dot" id="syncDot"></span><span id="syncTitle">กำลังเชื่อมต่อ...</span><br><span style="padding-left:14px" id="syncText"></span></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar"><div><div class="eyebrow" id="todayText"></div><h1 id="pageTitle">ภาพรวมแผนกฉุกเฉิน</h1></div><div class="actions"><span class="date-chip" id="shiftText"></span><button class="primary" onclick="openModal()">＋ ลงทะเบียนผู้ป่วย</button></div></header>
+
+      <!-- ============ ภาพรวม ============ -->
+      <div class="view" id="view-overview">
+        <section class="stats"><div class="stat-card"><div class="stat-top"><span>ผู้ป่วยวันนี้</span><span class="stat-icon green">♙</span></div><div class="stat-value" id="totalCount">–</div><div class="stat-note">ลงทะเบียนวันนี้ทั้งหมด</div></div><div class="stat-card"><div class="stat-top"><span>รอคัดกรอง</span><span class="stat-icon amber">◷</span></div><div class="stat-value" id="waitingCount">–</div><div class="stat-note" id="waitingNote">ผู้ป่วยรอคัดกรอง</div></div><div class="stat-card"><div class="stat-top"><span>อยู่ระหว่างรักษา</span><span class="stat-icon rose">✚</span></div><div class="stat-value" id="treatingCount">–</div><div class="stat-note">ผู้ป่วยในห้องฉุกเฉิน</div></div><div class="stat-card"><div class="stat-top"><span>จำหน่ายแล้ว</span><span class="stat-icon sky">✓</span></div><div class="stat-value" id="doneCount">–</div><div class="stat-note">เสร็จสิ้นวันนี้</div></div></section>
+        <div class="content-grid"><section class="panel"><div class="panel-header"><div><h2>รายการผู้ป่วยล่าสุด</h2><p>ผู้ป่วยวันนี้ และผู้ป่วยที่ยังไม่เสร็จสิ้น</p></div><button class="outline" onclick="loadPatients()">รีเฟรช</button></div><div class="search"><input id="searchInput" placeholder="ค้นหาชื่อ หรือเลข HN..." oninput="renderPatients()"><select class="filter" id="statusFilter" onchange="renderPatients()"><option value="all">ทุกสถานะ</option><option value="รอคัดกรอง">รอคัดกรอง</option><option value="กำลังรักษา">กำลังรักษา</option><option value="เสร็จสิ้น">เสร็จสิ้น</option></select></div><div class="table-wrap"><table class="patients"><thead><tr><th>ผู้ป่วย</th><th>เวลา</th><th>อาการสำคัญ</th><th>ระดับ</th><th>สถานะ</th></tr></thead><tbody id="patientRows"><tr><td colspan="5" class="empty">กำลังโหลดข้อมูล...</td></tr></tbody></table></div></section><section class="panel"><div class="panel-header"><div><h2>คิวรอตรวจ</h2><p>เรียงตามระดับความเร่งด่วน</p></div><span class="badge waiting" id="queueLabel">0 ราย</span></div><ul class="queue" id="queueList"></ul></section></div>
+      </div>
+
+      <!-- ============ รายการผู้ป่วย ============ -->
+      <div class="view hidden" id="view-list">
+        <section class="panel">
+          <div class="panel-header"><div><h2>รายการผู้ป่วยทั้งหมด</h2><p>เลือกช่วงวันที่ แล้วกรองตามสถานะหรือระดับความเร่งด่วน</p></div><button class="excel" onclick="exportList()">⬇ ส่งออก Excel</button></div>
+          <div class="toolbar">
+            <label for="listFrom">ตั้งแต่</label><input type="date" class="form-control" id="listFrom">
+            <label for="listTo">ถึง</label><input type="date" class="form-control" id="listTo">
+            <button class="primary" onclick="loadList()">แสดงข้อมูล</button>
+          </div>
+          <div class="toolbar">
+            <input class="form-control grow" id="listSearch" placeholder="ค้นหาชื่อ เลข HN หรืออาการ..." oninput="renderList()">
+            <select class="filter" id="listStatus" onchange="renderList()"><option value="all">ทุกสถานะ</option><option>รอคัดกรอง</option><option>กำลังรักษา</option><option>เสร็จสิ้น</option></select>
+            <select class="filter" id="listAcuity" onchange="renderList()"><option value="all">ทุกระดับ</option><option value="critical">ฉุกเฉินวิกฤต</option><option value="urgent">เร่งด่วน</option><option value="normal">ไม่เร่งด่วน</option></select>
+          </div>
+          <div class="count" id="listCount"></div>
+          <div class="table-wrap"><table class="patients"><thead><tr><th>วันที่</th><th>เวลา</th><th>ผู้ป่วย</th><th>เพศ</th><th>อาการสำคัญ</th><th>ระดับ</th><th>สถานะ</th></tr></thead><tbody id="listRows"><tr><td colspan="7" class="empty">กด "แสดงข้อมูล" เพื่อโหลดรายการ</td></tr></tbody></table></div>
+        </section>
+      </div>
+
+      <!-- ============ ประวัติการรักษา ============ -->
+      <div class="view hidden" id="view-history">
+        <section class="panel">
+          <div class="panel-header"><div><h2>ประวัติการรักษา</h2><p>ค้นด้วยเลข HN (ตรงทั้งหมด) หรือชื่อผู้ป่วย</p></div><button class="excel" onclick="exportHistory()">⬇ ส่งออก Excel</button></div>
+          <form class="toolbar" onsubmit="event.preventDefault();searchHistory()">
+            <input class="form-control grow" id="histQuery" placeholder="เช่น HN-02641 หรือ สมชาย">
+            <button class="primary" type="submit">ค้นหา</button>
+          </form>
+          <div id="histResult"><div class="empty">กรอกเลข HN หรือชื่อผู้ป่วยเพื่อดูประวัติ</div></div>
+        </section>
+      </div>
+
+      <!-- ============ รายงาน ============ -->
+      <div class="view hidden" id="view-report">
+        <section class="panel">
+          <div class="panel-header"><div><h2>รายงานสรุป</h2><p id="reportPeriod">เลือกช่วงวันที่ที่ต้องการสรุป</p></div><button class="excel" onclick="exportReport()">⬇ ส่งออก Excel</button></div>
+          <div class="toolbar">
+            <label for="repFrom">ตั้งแต่</label><input type="date" class="form-control" id="repFrom">
+            <label for="repTo">ถึง</label><input type="date" class="form-control" id="repTo">
+            <button class="primary" onclick="loadReport()">สร้างรายงาน</button>
+            <button class="outline" onclick="quickRange('today')">วันนี้</button>
+            <button class="outline" onclick="quickRange('7d')">7 วัน</button>
+            <button class="outline" onclick="quickRange('month')">เดือนนี้</button>
+          </div>
+        </section>
+        <section class="stats" style="margin-top:20px">
+          <div class="stat-card"><div class="stat-top"><span>ผู้ป่วยทั้งหมด</span><span class="stat-icon green">♙</span></div><div class="stat-value" id="repTotal">–</div><div class="stat-note" id="repTotalNote">&nbsp;</div></div>
+          <div class="stat-card"><div class="stat-top"><span>ฉุกเฉินวิกฤต</span><span class="stat-icon rose">!</span></div><div class="stat-value" id="repCritical">–</div><div class="stat-note" id="repCriticalNote">&nbsp;</div></div>
+          <div class="stat-card"><div class="stat-top"><span>เวลารอคัดกรองเฉลี่ย</span><span class="stat-icon amber">◷</span></div><div class="stat-value" id="repWait">–</div><div class="stat-note" id="repWaitNote">&nbsp;</div></div>
+          <div class="stat-card"><div class="stat-top"><span>เวลาอยู่ใน ER เฉลี่ย</span><span class="stat-icon sky">✓</span></div><div class="stat-value" id="repLos">–</div><div class="stat-note" id="repLosNote">&nbsp;</div></div>
+        </section>
+        <div class="report-grid" id="reportGrid"></div>
+        <section class="panel" style="margin-top:20px"><div class="panel-header"><div><h2>สรุปรายวัน</h2></div></div><div class="table-wrap" id="reportDaily"><div class="empty">ยังไม่มีข้อมูล</div></div></section>
+      </div>
+    </main>
+  </div>
+
+  <div class="modal-backdrop hidden" id="modal"><div class="modal"><div class="modal-head"><h2>ลงทะเบียนผู้ป่วยใหม่</h2><button class="close" onclick="closeModal()">×</button></div><form class="form" id="patientForm"><div class="form-grid"><div class="field"><label>ชื่อ–นามสกุล *</label><input class="form-control" name="name" required placeholder="เช่น สมชาย ใจดี"></div><div class="field"><label>เลข HN *</label><input class="form-control" name="hn" required placeholder="HN-0000"></div><div class="field"><label>อายุ (ปี)</label><input class="form-control" name="age" type="number" min="0" placeholder="35"></div><div class="field"><label>เพศ</label><select class="form-control" name="gender"><option>ไม่ระบุ</option><option>ชาย</option><option>หญิง</option></select></div><div class="field full"><label>อาการสำคัญ *</label><input class="form-control" name="symptom" required placeholder="ระบุอาการสำคัญที่มาโรงพยาบาล"></div><div class="field"><label>ระดับความเร่งด่วน</label><select class="form-control" name="acuity"><option value="normal">ไม่เร่งด่วน</option><option value="urgent">เร่งด่วน</option><option value="critical">ฉุกเฉินวิกฤต</option></select></div><div class="field"><label>สถานะเริ่มต้น</label><select class="form-control" name="status"><option>รอคัดกรอง</option><option>กำลังรักษา</option></select></div></div><div class="form-footer"><button type="button" class="outline" onclick="closeModal()">ยกเลิก</button><button class="primary" type="submit" id="saveBtn">บันทึกข้อมูล</button></div></form></div></div><div id="toast" class="toast hidden"></div>
+
+  <script>
+    const ACUITY_TEXT={critical:'ฉุกเฉินวิกฤต',urgent:'เร่งด่วน',normal:'ไม่เร่งด่วน'};
+    const ACUITY_RANK={critical:0,urgent:1,normal:2};
+    const STATUSES=['รอคัดกรอง','กำลังรักษา','เสร็จสิ้น'];
+    const VIEW_TITLES={overview:'ภาพรวมแผนกฉุกเฉิน',list:'รายการผู้ป่วย',history:'ประวัติการรักษา',report:'รายงาน'};
+    // เปิดผ่าน Apps Script หรือไม่ (หน้าเว็บ GAS จะรันบนโดเมน googleusercontent.com)
+    const inGAS=/(^|\.)googleusercontent\.com$|(^|\.)script\.google\.com$/.test(location.hostname);
+    let hasGAS=false;
+    function detectGAS(){try{return typeof google!=='undefined'&&!!google.script&&!!google.script.run}catch(_){return false}}
+    // ข้อมูลตัวอย่าง ใช้เฉพาะตอนเปิดไฟล์ตรงๆ (ไม่ได้เปิดผ่าน Apps Script)
+    const seed=[{name:'นางสาวกมลวรรณ สุขใจ',hn:'HN-02641',time:'10:42',symptom:'หายใจไม่สะดวก',acuity:'critical',status:'กำลังรักษา',gender:'หญิง',age:'28'},{name:'นายธนกร พรหมดี',hn:'HN-02640',time:'10:35',symptom:'อุบัติเหตุรถจักรยานยนต์',acuity:'urgent',status:'รอคัดกรอง',gender:'ชาย',age:'34'},{name:'นางสมศรี แซ่ตั้ง',hn:'HN-02639',time:'10:18',symptom:'ปวดท้องรุนแรง',acuity:'urgent',status:'กำลังรักษา',gender:'หญิง',age:'61'},{name:'เด็กชายภูริณัฐ แก้วใส',hn:'HN-02638',time:'09:56',symptom:'มีไข้สูง',acuity:'normal',status:'รอคัดกรอง',gender:'ชาย',age:'7'},{name:'นายประเสริฐ มีสุข',hn:'HN-02637',time:'09:40',symptom:'แผลถลอกที่แขน',acuity:'normal',status:'เสร็จสิ้น',gender:'ชาย',age:'45'}];
+    let patients=[];
+    function useSeed(){const t=ymd(new Date());patients=seed.map((p,i)=>Object.assign({},p,{row:i+2,key:(i+2)+'|'+p.hn,date:t,isToday:true,ts:Date.now()-i*600000,acuityText:ACUITY_TEXT[p.acuity]}))}
+    let loading=false;
+
+    /* ---------- helpers ---------- */
+    const $=id=>document.getElementById(id);
+    function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+    function statusClass(s){return s==='รอคัดกรอง'?'waiting':s==='เสร็จสิ้น'?'done':'normal'}
+    function fmtTime(d){return d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}
+    function ymd(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+    function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x}
+    function thDate(s,long){if(!s)return '';const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d).toLocaleDateString('th-TH',long?{day:'numeric',month:'long',year:'numeric'}:{day:'numeric',month:'short',year:'2-digit'})}
+    function hourOf(p){if(p.ts)return new Date(p.ts).getHours();const h=parseInt(String(p.time),10);return isNaN(h)?-1:h}
+    function shiftOf(p){const h=hourOf(p);return h<0?'ไม่ทราบ':h<8?'เวรดึก (00–08)':h<16?'เวรเช้า (08–16)':'เวรบ่าย (16–24)'}
+    function ageGroup(p){const a=p.age===''||p.age==null?NaN:Number(p.age);return isNaN(a)?'ไม่ระบุ':a<15?'0–14 ปี':a<60?'15–59 ปี':'60 ปีขึ้นไป'}
+    function fmtMin(m){if(m==null||isNaN(m))return '–';m=Math.round(m);return m<60?m+' นาที':Math.floor(m/60)+' ชม. '+(m%60)+' นาที'}
+    function avg(a){return a.length?a.reduce((s,x)=>s+x,0)/a.length:null}
+    function pct(n,t){return t?Math.round(n*100/t)+'%':'0%'}
+    function call(fn,...args){return new Promise((res,rej)=>{google.script.run.withSuccessHandler(res).withFailureHandler(rej)[fn](...args)})}
+    function emptyRow(cols,msg){return `<tr><td colspan="${cols}" class="empty">${esc(msg)}</td></tr>`}
+
+    /* ---------- header / sync ---------- */
+    function renderHeader(){
+      const now=new Date(), h=now.getHours();
+      $('todayText').textContent=now.toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+      $('shiftText').textContent='● '+(h<8?'เวรดึก 00:00–08:00':h<16?'เวรเช้า 08:00–16:00':'เวรบ่าย 16:00–24:00');
+    }
+    function setSync(ok,msg){
+      $('syncDot').style.background=ok?'#64ad8d':'#c85d62';
+      $('syncTitle').textContent=ok?'ระบบพร้อมใช้งาน':'เชื่อมต่อไม่สำเร็จ';
+      $('syncText').textContent=msg;
+    }
+
+    /* ---------- เปลี่ยนหน้า ---------- */
+    let currentView='overview', listLoaded=false, reportLoaded=false;
+    function showView(v){
+      currentView=v;
+      document.querySelectorAll('.view').forEach(el=>el.classList.toggle('hidden',el.id!=='view-'+v));
+      document.querySelectorAll('.nav button[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
+      $('pageTitle').textContent=VIEW_TITLES[v];
+      if(v==='list'&&!listLoaded)loadList();
+      if(v==='report'&&!reportLoaded)loadReport();
+      if(v==='history')setTimeout(()=>$('histQuery').focus(),50);
+    }
+    function invalidate(){listLoaded=false;reportLoaded=false}
+
+    /* ---------- ภาพรวม ---------- */
+    function loadPatients(silent){
+      if(!hasGAS){renderPatients();setSync(true,'โหมดทดลอง (ไม่ได้เชื่อมชีต) · เปิดจาก: '+(location.hostname||'ไฟล์ในเครื่อง'));return}
+      if(loading)return;loading=true;
+      google.script.run
+        .withSuccessHandler(list=>{loading=false;patients=list||[];renderPatients();setSync(true,'ซิงก์ล่าสุด '+fmtTime(new Date())+' น.');if(!silent)toast('โหลดข้อมูลล่าสุดแล้ว')})
+        .withFailureHandler(err=>{loading=false;setSync(false,'ลองกดรีเฟรชอีกครั้ง');toast('โหลดข้อมูลไม่สำเร็จ: '+err.message,true)})
+        .getPatients(true);
+    }
+
+    function renderPatients(){
+      const q=($('searchInput').value||'').toLowerCase(), f=$('statusFilter').value;
+      const rows=patients.filter(p=>(p.name+p.hn+p.symptom).toLowerCase().includes(q)&&(f==='all'||p.status===f));
+      $('patientRows').innerHTML=rows.length?rows.map(p=>`<tr><td><div class="patient-name">${esc(p.name)}</div><div class="patient-id">${esc(p.hn)}${p.age?' · '+esc(p.age)+' ปี':''}${p.isToday?'':' · ค้างจากวันก่อน'}</div></td><td>${esc(p.time)}</td><td>${esc(p.symptom)}</td><td><span class="badge ${esc(p.acuity)}">${esc(p.acuityText)}</span></td><td><select class="status-select ${statusClass(p.status)}" data-row="${p.row}" onchange="changeStatus(this)" title="เปลี่ยนสถานะ">${STATUSES.map(s=>`<option${s===p.status?' selected':''}>${s}</option>`).join('')}</select></td></tr>`).join(''):emptyRow(5,'ไม่พบข้อมูลผู้ป่วย');
+
+      const today=patients.filter(p=>p.isToday);
+      const waiting=patients.filter(p=>p.status==='รอคัดกรอง').sort((a,b)=>(ACUITY_RANK[a.acuity]-ACUITY_RANK[b.acuity])||(a.ts-b.ts));
+      $('totalCount').textContent=today.length;
+      $('waitingCount').textContent=waiting.length;
+      $('treatingCount').textContent=patients.filter(p=>p.status==='กำลังรักษา').length;
+      $('doneCount').textContent=today.filter(p=>p.status==='เสร็จสิ้น').length;
+      const crit=waiting.filter(p=>p.acuity==='critical').length;
+      $('waitingNote').textContent=crit?`ฉุกเฉินวิกฤต ${crit} ราย`:'ผู้ป่วยรอคัดกรอง';
+      $('queueLabel').textContent=waiting.length+' ราย';
+      $('queueList').innerHTML=waiting.length?waiting.map((p,i)=>{const mins=p.ts?Math.max(0,Math.round((Date.now()-p.ts)/60000)):null;return `<li><div class="queue-number">${i+1}</div><div class="queue-info"><strong>${esc(p.name)}</strong><span>${esc(p.hn)} · ${esc(p.symptom)}</span></div><div class="queue-time"><span class="badge ${esc(p.acuity)}">${esc(p.acuityText)}</span><br>${esc(p.time)} น.${mins!==null?' · รอ '+mins+' นาที':''}</div></li>`}).join(''):'<li class="empty">ไม่มีผู้ป่วยรอตรวจ</li>';
+    }
+
+    function changeStatus(sel){
+      const row=Number(sel.dataset.row), p=patients.find(x=>x.row===row);
+      if(!p)return;
+      const old=p.status, s=sel.value;
+      p.status=s;renderPatients();invalidate();
+      if(!hasGAS){toast('อัปเดตสถานะแล้ว (โหมดทดลอง)');return}
+      google.script.run
+        .withSuccessHandler(r=>{if(r&&r.ok){toast('อัปเดตสถานะ '+p.name+' เป็น "'+s+'" แล้ว')}else{p.status=old;renderPatients();toast('ไม่พบผู้ป่วยในชีต กรุณากดรีเฟรช',true)}})
+        .withFailureHandler(e=>{p.status=old;renderPatients();toast('อัปเดตไม่สำเร็จ: '+e.message,true)})
+        .updateStatus(row,p.hn,s);
+    }
+
+    /* ---------- รายการผู้ป่วย ---------- */
+    let listData=[];
+    async function loadList(){
+      const from=$('listFrom').value, to=$('listTo').value;
+      if(!from||!to||from>to){toast('กรุณาเลือกช่วงวันที่ให้ถูกต้อง',true);return}
+      $('listRows').innerHTML=emptyRow(7,'กำลังโหลดข้อมูล...');$('listCount').textContent='';
+      try{
+        listData=hasGAS?await call('getPatientsRange',from,to):patients.filter(p=>p.date>=from&&p.date<=to);
+        listLoaded=true;renderList();
+      }catch(e){$('listRows').innerHTML=emptyRow(7,'โหลดไม่สำเร็จ: '+e.message)}
+    }
+    function filteredList(){
+      const q=($('listSearch').value||'').toLowerCase(), st=$('listStatus').value, ac=$('listAcuity').value;
+      return listData.filter(p=>(p.name+p.hn+p.symptom).toLowerCase().includes(q)&&(st==='all'||p.status===st)&&(ac==='all'||p.acuity===ac));
+    }
+    function renderList(){
+      const rows=filteredList();
+      $('listCount').textContent=`พบ ${rows.length} ราย`+(rows.length!==listData.length?` (จากทั้งหมด ${listData.length} ราย)`:'')+` · ${thDate($('listFrom').value,true)} – ${thDate($('listTo').value,true)}`;
+      $('listRows').innerHTML=rows.length?rows.map(p=>`<tr><td style="white-space:nowrap">${esc(thDate(p.date))}</td><td>${esc(p.time)}</td><td><div class="patient-name">${esc(p.name)}</div><div class="patient-id">${esc(p.hn)}${p.age?' · '+esc(p.age)+' ปี':''}</div></td><td>${esc(p.gender)}</td><td>${esc(p.symptom)}</td><td><span class="badge ${esc(p.acuity)}">${esc(p.acuityText)}</span></td><td><span class="badge ${statusClass(p.status)}">${esc(p.status)}</span></td></tr>`).join(''):emptyRow(7,'ไม่พบข้อมูลในช่วงวันที่นี้');
+    }
+    function exportList(){
+      if(!listLoaded){toast('กรุณากด "แสดงข้อมูล" ก่อน',true);return}
+      const rows=filteredList();
+      if(!rows.length){toast('ไม่มีข้อมูลให้ส่งออก',true);return}
+      const aoa=[['วันที่','เวลา','เลข HN','ชื่อ–นามสกุล','อายุ (ปี)','เพศ','อาการสำคัญ','ระดับความเร่งด่วน','สถานะ','อัปเดตล่าสุด']]
+        .concat(rows.map(p=>[p.date,p.time,p.hn,p.name,p.age===''?'':Number(p.age),p.gender,p.symptom,p.acuityText,p.status,p.updatedAt||'']));
+      downloadXlsx(`รายการผู้ป่วย_${$('listFrom').value}_ถึง_${$('listTo').value}.xlsx`,[{name:'รายการผู้ป่วย',aoa,cols:[12,8,12,26,9,9,34,17,12,17]}]);
+    }
+
+    /* ---------- ประวัติการรักษา ---------- */
+    let histData=null, histQuery='';
+    async function searchHistory(){
+      const q=$('histQuery').value.trim();
+      if(!q){toast('กรุณากรอกเลข HN หรือชื่อผู้ป่วย',true);return}
+      histQuery=q;
+      $('histResult').innerHTML='<div class="empty">กำลังค้นหา...</div>';
+      try{
+        if(hasGAS)histData=await call('getHistory',q);
+        else{const ql=q.toLowerCase();histData={visits:patients.filter(p=>p.hn.toLowerCase()===ql||p.name.toLowerCase().includes(ql)),logs:[]}}
+        renderHistory();
+      }catch(e){$('histResult').innerHTML=`<div class="empty">ค้นหาไม่สำเร็จ: ${esc(e.message)}</div>`}
+    }
+    function renderHistory(){
+      const v=histData.visits;
+      if(!v.length){$('histResult').innerHTML=`<div class="empty">ไม่พบประวัติของ "${esc(histQuery)}"</div>`;return}
+      const people=new Set(v.map(x=>x.hn)).size;
+      const logsBy={};histData.logs.forEach(l=>(logsBy[l.key]=logsBy[l.key]||[]).push(l));
+      $('histResult').innerHTML=`<div class="count">พบ ${v.length} ครั้ง${people>1?` จากผู้ป่วย ${people} คน`:''}</div>`+v.map(p=>{
+        const logs=(logsBy[p.key]||[]).sort((a,b)=>a.ts-b.ts);
+        return `<div class="visit"><div class="visit-head"><div><div class="patient-name">${esc(p.name)}</div><div class="visit-meta">${esc(p.hn)}${p.age?' · '+esc(p.age)+' ปี':''}${p.gender&&p.gender!=='ไม่ระบุ'?' · '+esc(p.gender):''} · มาเมื่อ ${esc(thDate(p.date,true))} เวลา ${esc(p.time)} น.</div></div><div><span class="badge ${esc(p.acuity)}">${esc(p.acuityText)}</span> <span class="badge ${statusClass(p.status)}">${esc(p.status)}</span></div></div><div class="visit-meta"><b style="color:var(--ink);font-weight:500">อาการสำคัญ:</b> ${esc(p.symptom)}</div>${logs.length?`<ul class="timeline">${logs.map(l=>`<li>${esc(thDate(l.time.slice(0,10)))} ${esc(l.time.slice(11))} น. — ${l.from?esc(l.from)+' → ':'ลงทะเบียน: '}<b>${esc(l.to)}</b>${l.by?' · '+esc(l.by):''}</li>`).join('')}</ul>`:''}</div>`;
+      }).join('');
+    }
+    function exportHistory(){
+      if(!histData||!histData.visits.length){toast('กรุณาค้นหาประวัติก่อน',true);return}
+      const vByKey={};histData.visits.forEach(p=>vByKey[p.key]=p);
+      const visits=[['วันที่','เวลา','เลข HN','ชื่อ–นามสกุล','อายุ (ปี)','เพศ','อาการสำคัญ','ระดับความเร่งด่วน','สถานะล่าสุด','อัปเดตล่าสุด']]
+        .concat(histData.visits.map(p=>[p.date,p.time,p.hn,p.name,p.age===''?'':Number(p.age),p.gender,p.symptom,p.acuityText,p.status,p.updatedAt||'']));
+      const logs=[['วันเวลา','เลข HN','ชื่อ–นามสกุล','วันที่มารับบริการ','จากสถานะ','เป็นสถานะ','ผู้บันทึก']]
+        .concat(histData.logs.slice().sort((a,b)=>a.ts-b.ts).map(l=>{const p=vByKey[l.key]||{};return [l.time,p.hn||'',p.name||'',p.date||'',l.from||'(ลงทะเบียน)',l.to,l.by]}));
+      downloadXlsx(`ประวัติการรักษา_${histQuery.replace(/[\\/:*?"<>|\s]+/g,'_')}.xlsx`,[
+        {name:'การมารับบริการ',aoa:visits,cols:[12,8,12,26,9,9,34,17,12,17]},
+        {name:'ประวัติสถานะ',aoa:logs,cols:[17,12,26,14,13,13,26]}
+      ]);
+    }
+
+    /* ---------- รายงาน ---------- */
+    let reportData=[], report=null;
+    function quickRange(k){
+      const t=new Date();
+      $('repTo').value=ymd(t);
+      $('repFrom').value=k==='today'?ymd(t):k==='7d'?ymd(addDays(t,-6)):ymd(new Date(t.getFullYear(),t.getMonth(),1));
+      loadReport();
+    }
+    async function loadReport(){
+      const from=$('repFrom').value, to=$('repTo').value;
+      if(!from||!to||from>to){toast('กรุณาเลือกช่วงวันที่ให้ถูกต้อง',true);return}
+      $('reportPeriod').textContent='กำลังสร้างรายงาน...';
+      try{
+        reportData=hasGAS?await call('getPatientsRange',from,to):patients.filter(p=>p.date>=from&&p.date<=to);
+        reportLoaded=true;report=buildReport(reportData,from,to);renderReport();
+      }catch(e){$('reportPeriod').textContent='สร้างรายงานไม่สำเร็จ: '+e.message}
+    }
+    function countBy(rows,fn,keys){const m={};(keys||[]).forEach(k=>m[k]=0);rows.forEach(p=>{const k=fn(p);m[k]=(m[k]||0)+1});return m}
+    function buildReport(rows,from,to){
+      const waits=rows.filter(p=>p.triageTs&&p.ts).map(p=>Math.max(0,(p.triageTs-p.ts)/60000));
+      const los=rows.filter(p=>p.doneTs&&p.ts).map(p=>Math.max(0,(p.doneTs-p.ts)/60000));
+      const daily={};
+      rows.forEach(p=>{const d=daily[p.date]||(daily[p.date]={total:0,critical:0,urgent:0,normal:0,done:0});d.total++;d[p.acuity]=(d[p.acuity]||0)+1;if(p.status==='เสร็จสิ้น')d.done++});
+      return {
+        from,to,total:rows.length,
+        critical:rows.filter(p=>p.acuity==='critical').length,
+        done:rows.filter(p=>p.status==='เสร็จสิ้น').length,
+        avgWait:avg(waits),waitN:waits.length,avgLos:avg(los),losN:los.length,
+        groups:[
+          ['ตามระดับความเร่งด่วน',countBy(rows,p=>p.acuityText,Object.values(ACUITY_TEXT))],
+          ['ตามสถานะ',countBy(rows,p=>p.status,STATUSES)],
+          ['ตามเวร',countBy(rows,shiftOf,['เวรดึก (00–08)','เวรเช้า (08–16)','เวรบ่าย (16–24)'])],
+          ['ตามเพศ',countBy(rows,p=>p.gender||'ไม่ระบุ',['ชาย','หญิง','ไม่ระบุ'])],
+          ['ตามช่วงอายุ',countBy(rows,ageGroup,['0–14 ปี','15–59 ปี','60 ปีขึ้นไป','ไม่ระบุ'])]
+        ],
+        daily:Object.keys(daily).sort().map(d=>Object.assign({date:d},daily[d]))
+      };
+    }
+    function renderReport(){
+      const r=report;
+      $('reportPeriod').textContent=`ช่วงวันที่ ${thDate(r.from,true)} – ${thDate(r.to,true)}`;
+      $('repTotal').textContent=r.total;$('repTotalNote').textContent=`เสร็จสิ้นแล้ว ${r.done} ราย (${pct(r.done,r.total)})`;
+      $('repCritical').textContent=r.critical;$('repCriticalNote').textContent=`${pct(r.critical,r.total)} ของผู้ป่วยทั้งหมด`;
+      $('repWait').textContent=fmtMin(r.avgWait);$('repWaitNote').textContent=r.waitN?`คำนวณจาก ${r.waitN} ราย`:'ยังไม่มีข้อมูลการเปลี่ยนสถานะ';
+      $('repLos').textContent=fmtMin(r.avgLos);$('repLosNote').textContent=r.losN?`คำนวณจาก ${r.losN} ราย`:'ยังไม่มีผู้ป่วยที่เสร็จสิ้น';
+      $('reportGrid').innerHTML=r.groups.map(([title,m])=>{
+        const max=Math.max(1,...Object.values(m));
+        return `<section class="panel"><div class="panel-header"><div><h2>${esc(title)}</h2></div></div><table class="mini"><thead><tr><th>รายการ</th><th class="num">จำนวน</th><th class="num">ร้อยละ</th></tr></thead><tbody>${Object.entries(m).map(([k,n])=>`<tr><td>${esc(k)}<div class="bar"><i style="width:${n*100/max}%"></i></div></td><td class="num">${n}</td><td class="num">${pct(n,r.total)}</td></tr>`).join('')}</tbody></table></section>`;
+      }).join('');
+      $('reportDaily').innerHTML=r.daily.length?`<table class="mini"><thead><tr><th>วันที่</th><th class="num">ทั้งหมด</th><th class="num">ฉุกเฉินวิกฤต</th><th class="num">เร่งด่วน</th><th class="num">ไม่เร่งด่วน</th><th class="num">เสร็จสิ้น</th></tr></thead><tbody>${r.daily.map(d=>`<tr><td>${esc(thDate(d.date,true))}</td><td class="num">${d.total}</td><td class="num">${d.critical}</td><td class="num">${d.urgent}</td><td class="num">${d.normal}</td><td class="num">${d.done}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">ไม่มีข้อมูลในช่วงวันที่นี้</div>';
+    }
+    function exportReport(){
+      if(!report){toast('กรุณากด "สร้างรายงาน" ก่อน',true);return}
+      const r=report, round=x=>x==null?'':Math.round(x);
+      const sum=[['รายงานสรุปผู้ป่วยแผนกฉุกเฉิน (ER WatchCare)'],['ช่วงวันที่',r.from+' ถึง '+r.to],['ออกรายงานเมื่อ',new Date().toLocaleString('th-TH')],[],
+        ['ตัวชี้วัด','ค่า'],['ผู้ป่วยทั้งหมด (ราย)',r.total],['ฉุกเฉินวิกฤต (ราย)',r.critical],['เสร็จสิ้น (ราย)',r.done],
+        ['เวลารอคัดกรองเฉลี่ย (นาที)',round(r.avgWait)],['จำนวนที่ใช้คำนวณเวลารอ (ราย)',r.waitN],['เวลาอยู่ใน ER เฉลี่ย (นาที)',round(r.avgLos)],['จำนวนที่ใช้คำนวณเวลาอยู่ใน ER (ราย)',r.losN]];
+      r.groups.forEach(([title,m])=>{sum.push([],[title,'จำนวน','ร้อยละ']);Object.entries(m).forEach(([k,n])=>sum.push([k,n,r.total?Math.round(n*1000/r.total)/10:0]))});
+      const daily=[['วันที่','ทั้งหมด','ฉุกเฉินวิกฤต','เร่งด่วน','ไม่เร่งด่วน','เสร็จสิ้น']].concat(r.daily.map(d=>[d.date,d.total,d.critical,d.urgent,d.normal,d.done]));
+      const list=[['วันที่','เวลา','เลข HN','ชื่อ–นามสกุล','อายุ (ปี)','เพศ','อาการสำคัญ','ระดับความเร่งด่วน','สถานะ','เวร','รอคัดกรอง (นาที)','อยู่ใน ER (นาที)']]
+        .concat(reportData.map(p=>[p.date,p.time,p.hn,p.name,p.age===''?'':Number(p.age),p.gender,p.symptom,p.acuityText,p.status,shiftOf(p),p.triageTs&&p.ts?Math.round((p.triageTs-p.ts)/60000):'',p.doneTs&&p.ts?Math.round((p.doneTs-p.ts)/60000):'']));
+      downloadXlsx(`รายงาน_ER_${r.from}_ถึง_${r.to}.xlsx`,[
+        {name:'สรุป',aoa:sum,cols:[36,14,10]},
+        {name:'รายวัน',aoa:daily,cols:[12,10,13,10,12,10]},
+        {name:'รายชื่อผู้ป่วย',aoa:list,cols:[12,8,12,26,9,9,34,17,12,16,15,15]}
+      ]);
+    }
+
+    /* ---------- Excel ---------- */
+    function downloadXlsx(filename,sheets){
+      if(typeof XLSX==='undefined'){toast('โหลดตัวสร้างไฟล์ Excel ไม่สำเร็จ กรุณาตรวจสอบอินเทอร์เน็ตแล้วรีเฟรชหน้า',true);return}
+      try{
+        const wb=XLSX.utils.book_new();
+        sheets.forEach(s=>{const ws=XLSX.utils.aoa_to_sheet(s.aoa);if(s.cols)ws['!cols']=s.cols.map(w=>({wch:w}));XLSX.utils.book_append_sheet(wb,ws,s.name.slice(0,31))});
+        XLSX.writeFile(wb,filename);
+        toast('ดาวน์โหลด '+filename+' แล้ว');
+      }catch(e){toast('สร้างไฟล์ Excel ไม่สำเร็จ: '+e.message,true)}
+    }
+
+    /* ---------- modal / toast ---------- */
+    function openModal(){$('modal').classList.remove('hidden')}
+    function closeModal(){$('modal').classList.add('hidden');$('patientForm').reset()}
+    let toastTimer;
+    function toast(msg,isError){const el=$('toast');el.textContent=msg;el.classList.toggle('error',!!isError);el.classList.remove('hidden');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.add('hidden'),isError?5000:2600)}
+
+    $('patientForm').addEventListener('submit',e=>{
+      e.preventDefault();
+      const d=new FormData(e.target), acuity=d.get('acuity'), now=new Date();
+      const p={name:d.get('name').trim(),hn:d.get('hn').trim(),age:d.get('age'),gender:d.get('gender'),time:fmtTime(now),symptom:d.get('symptom').trim(),acuity,acuityText:ACUITY_TEXT[acuity],status:d.get('status')};
+      invalidate();
+      if(!hasGAS){const row=Date.now();patients.unshift(Object.assign(p,{row,key:row+'|'+p.hn,date:ymd(now),isToday:true,ts:now.getTime()}));renderPatients();closeModal();toast('บันทึกแล้ว (โหมดทดลอง ไม่ได้บันทึกลงชีต)');return}
+      const btn=$('saveBtn');btn.disabled=true;btn.textContent='กำลังบันทึก...';
+      google.script.run
+        .withSuccessHandler(()=>{btn.disabled=false;btn.textContent='บันทึกข้อมูล';closeModal();toast('บันทึกข้อมูลผู้ป่วยเรียบร้อยแล้ว');loadPatients(true)})
+        .withFailureHandler(err=>{btn.disabled=false;btn.textContent='บันทึกข้อมูล';toast('บันทึกไม่สำเร็จ: '+err.message,true)})
+        .savePatient(p);
+    });
+
+    /* ---------- เริ่มต้น ---------- */
+    // รอให้ google.script.run พร้อมก่อน (บางครั้งโหลดช้ากว่าสคริปต์ของหน้า) สูงสุด ~5 วินาที
+    function init(tries){
+      if(detectGAS()){hasGAS=true;loadPatients(true);return}
+      if(inGAS&&tries<50){setTimeout(()=>init(tries+1),100);return}
+      if(inGAS){setSync(false,'เปิดผ่าน Apps Script แต่ไม่พบ google.script.run');$('patientRows').innerHTML=emptyRow(5,'เชื่อมต่อ Google Sheet ไม่สำเร็จ กรุณารีเฟรชหน้า');return}
+      useSeed();loadPatients(true);
+    }
+    (function setDefaultDates(){
+      const t=new Date();
+      $('listFrom').value=ymd(addDays(t,-6));$('listTo').value=ymd(t);
+      $('repFrom').value=ymd(new Date(t.getFullYear(),t.getMonth(),1));$('repTo').value=ymd(t);
+    })();
+    renderHeader();
+    init(0);
+    // รีเฟรชหน้าภาพรวมอัตโนมัติทุก 1 นาที (ให้เห็นข้อมูลที่เครื่องอื่นบันทึก)
+    setInterval(()=>{renderHeader();if(currentView==='overview'&&document.visibilityState==='visible'&&$('modal').classList.contains('hidden'))loadPatients(true)},60000);
+  </script>
+</body>
+</html>
